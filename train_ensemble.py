@@ -11,9 +11,9 @@ from tsforecast import XGBForecaster
 from tsforecast import time_series_move_lag, view_rolling_features
 
 def test():
-    fn = datasets[3]
+    fn = datasets[6]
     series = fn()
-    size = 200
+    size = 400
 
     # k = find_time_series_degree(series)
     # sta = StationaryTransfer(k)

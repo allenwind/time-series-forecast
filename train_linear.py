@@ -10,7 +10,7 @@ from tsforecast import LinearForecaster
 from tsforecast import time_series_move_lag
 
 def test():
-    fn = datasets[-1]
+    fn = datasets[6]
     series = fn()
     size = 200
 
