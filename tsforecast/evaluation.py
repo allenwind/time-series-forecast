@@ -1,14 +1,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from .errors import eval_errors
+from .errors import eval_errors, compute_mape_error
 
 # 模型的评估和预测可视化
-
-def compute_mape_error(y_true, y_fore):
-    # 计算 MAPE 误差
-    # 计算可能会出现 inf
-    return 100 * np.mean(np.abs(y_true-y_fore) / y_true)
 
 def eval_model(model, series, val_series, forecast_series, size, dataset="", bound=True):
     # TODO

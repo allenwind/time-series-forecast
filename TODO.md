@@ -10,6 +10,7 @@
 8. 平稳化后通过 k sigma 去噪, 使用边缘值替代
 9. 计算时序潜在最大周期
 10. 处理预测 lag=1 的滞后问题 (done)
+11. XGBoost callback
 
 ## Q&A
 

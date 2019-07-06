@@ -81,7 +81,7 @@ def multi_periodic_function(size=1000):
         1/5 * np.sin(15*x) + 1/5 * np.cos(14*x)
     return _add_noise(y, add=True, multiply=False)
 
-def random_fourier_series(size=1000, n=50):
+def random_fourier_series(size=1000, n=100):
     # random fourier series
     # 随机傅里叶序列, 用于模拟复杂的多周期时序数据
     # 傅里叶级数的系数是随机生成的, 服从均匀分布
@@ -91,15 +91,15 @@ def random_fourier_series(size=1000, n=50):
     # 返回的序列中包括加成和乘成噪声
 
     x = np.linspace(0, 10*np.pi, size)
-    an = np.random.uniform(-1, 1, n)
-    bn = np.random.uniform(-1, 1, n)
+    an = np.random.normal(0, 1, n)
+    bn = np.random.normal(0, 1, n)
 
     s = 0
     y = 0
     for a, b in zip(an, bn):
         s += 1
         y += a * np.cos(s*x) + b * np.sin(s*x)
-    return _add_noise(y, add=True, multiply=False)
+    return _add_noise(y, add=False, multiply=False)
 
 def chaos_series(size=1000):
     # chaos r = 3.88

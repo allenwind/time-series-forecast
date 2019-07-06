@@ -11,12 +11,9 @@ from tsforecast import MLPForecaster
 from tsforecast import time_series_move_lag
 
 def test():
-    fn = datasets[-1]
+    fn = datasets[3]
     series = fn()
     size = 200
-
-    series = pd.read_csv("iob.csv").values[:, 1].ravel()
-    size = 20
 
     scaler = SimpleScaler()
     series = scaler.fit_transform(series)

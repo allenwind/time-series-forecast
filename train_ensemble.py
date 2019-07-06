@@ -11,7 +11,7 @@ from tsforecast import XGBForecaster
 from tsforecast import time_series_move_lag, view_rolling_features
 
 def test():
-    fn = datasets[6]
+    fn = datasets[3]
     series = fn()
     size = 200
 
@@ -22,8 +22,8 @@ def test():
     # series = np.diff(series)
     # view_rolling_features(series, size)
 
-    size = 30
-    series = pd.read_csv("process-memory.csv").values[:, 1].ravel()
+    # size = 30
+    # series = pd.read_csv("process-memory.csv").values[:, 1].ravel()
 
     scaler = SimpleScaler()
     series = scaler.fit_transform(series)
@@ -35,7 +35,7 @@ def test():
     y_predict = m.predict(2*len(s2))
     y_predict = time_series_move_lag(y_predict, pad="mean")
 
-    eval_model(m, s1, s2, y_predict, 20, fn.__name__, bound=False)
+    eval_model(m, s1, s2, y_predict, 20, fn.__name__, bound=True)
 
 if __name__ == "__main__":
     test()
