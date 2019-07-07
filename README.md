@@ -44,12 +44,30 @@ prediction 和 forecast 并不是完全相等的概念. prediction 范畴更大,
 
 ### preprocessing
 
+预处理包括如下:
+1. 缺失值处理
+1. 白噪声检验或随机游走检验
+2. 去噪
+3. 平稳化
+4. 数据正太化
+5. 归一化
+
 原始时序中包含大量噪声, 可以使用如下方法去噪:
 
 1. 平滑法
 2. 数字滤波器
 
 此外, 还要通过白噪声检验或[随机游走检验](https://en.wikipedia.org/wiki/Random_walk_hypothesis)检验数据是否可预测.
+
+stationary  --> detrend
+
+拟合法或差分(对数差分)
+
+正太分布化
+
+https://machinelearningmastery.com/how-to-transform-data-to-fit-the-normal-distribution/
+
+https://en.wikipedia.org/wiki/Log-normal_distribution
 
 ### features
 
@@ -79,11 +97,18 @@ prediction 和 forecast 并不是完全相等的概念. prediction 范畴更大,
 3. 深度学习
 4. 深度学习 + combination (并行化训练)
 
-多时间步预测策略：
+以上的数据标注方法仅能让模型预测一个时间步的取值, 如何预测多个时间步呢? 我们有如下策略, 多时间步预测策略：
 
-1. 直接输出所需时间步
-2. 递归输出所需时间步
-3. 混合策略
+1. 直接多步预测
+2. 递归多步预测
+3. 多步输出策略
+4. 混合策略
+
+这些策略的详细解释和说明参考 [papers](url)
+
+直接多步预测: 建模获得预测值后, 使用新的模型再预测下一个值, 以此类推
+递归多步预测: 
+多步输出策略
 
 我们使用第二点: 递归输出所需时间步
 
