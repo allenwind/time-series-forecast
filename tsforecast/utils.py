@@ -7,8 +7,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
 from statsmodels.tsa.stattools import adfuller
-from .tsfeatures import extract_time_series_forecast_features
 
+from .tsfeatures import extract_time_series_forecast_features
+from .tsfeatures import find_time_series_max_periodic
+from .tsfeatures.autocorrelation import time_series_all_autocorrelation
 from .errors import eval_errors
 
 time_series_features_size = lambda x: len(extract_time_series_forecast_features(x))
@@ -84,17 +86,22 @@ def find_best_window_size(series):
     # 但是计算十分耗时
     # 此外, 还可以使用傅里叶方法
     # 详细见 fourier.py 模块
-    return (len(series)-3) // 5
+    return find_time_series_max_periodic(series)
 
 def find_max_autocorrelation_lag(series):
     # 计算最大自相关系数的 lag
     # wiki:
     # https://en.wikipedia.org/wiki/Autocorrelation
 
-    pass
+    return find_time_series_max_periodic(series)
 
-def visualize_lag(series, max_lag=25):
-    pass
+def visualize_autocorrelation(series, offset=0):
+    auto = np.array(time_series_all_autocorrelation(series))
+    plt.subplot(211)
+    plt.plot(series)
+    plt.subplot(212)
+    plt.plot(auto[offset:])
+    plt.show()
 
 def timestamp2datetime(ts):
     return datetime.datetime.fromtimestamp(int(ts))
@@ -205,11 +212,15 @@ class StationaryTransfer:
     
     # TODO 整合自动定阶方法
 
-    def __init__(self, k=1):
+    def __init__(self, k=1, log=False):
         self.k = k
+        self.log = log
         self._init_values = []
     
     def fit_transform(self, series):
+        if self.log:
+            series = np.log(series)
+
         # 迭代地执行高阶差分
         k = self.k
         while k:
@@ -228,6 +239,9 @@ class StationaryTransfer:
             values = np.append(values, series)
             values = np.cumsum(values)
             series = values
+        
+        if self.log:
+            values = np.exp(values)
         return values
 
 class PowerTransfer:
