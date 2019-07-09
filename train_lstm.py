@@ -11,14 +11,16 @@ from tsforecast import LSTMForecaster
 def test():
     fn = datasets[5]
     series = fn()
-    size = 15
+    size = 100
+
+    series = np.sin(np.linspace(0, 20*np.pi, 500))
 
     scaler = SimpleScaler()
     series = scaler.fit_transform(series)
     s1, s2 = train_val_split(series, train_rate=0.7)
 
     m = LSTMForecaster(size)
-    m.fit(s1, epochs=3, batch_size=1, validation_series=s2)
+    m.fit(s1, epochs=10, batch_size=100, validation_series=s2)
     y_predict = m.predict(2*len(s2))
 
     eval_model(m, s1, s2, y_predict, 20, fn.__name__)

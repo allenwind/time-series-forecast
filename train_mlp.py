@@ -15,14 +15,14 @@ def test():
     fn = datasets[5]
     series = fn()
     size = find_time_series_max_periodic(series)
-    size = 15
+    size = 30
 
     scaler = SimpleScaler()
     series = scaler.fit_transform(series)
     s1, s2 = train_val_split(series, train_rate=0.7)
 
     m = MLPForecaster(size, with_norm=True)
-    m.fit(s1, epochs=3000, batch_size=100, validation_series=s2)
+    m.fit(s1, epochs=1000, batch_size=100, validation_series=s2)
     y_predict = m.predict(2*len(s2))
     y_predict = time_series_move_lag(y_predict, pad="first")
 
