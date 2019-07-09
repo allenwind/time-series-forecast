@@ -25,7 +25,7 @@ def eval_model(model, series, val_series, forecast_series, size, dataset="", bou
     fig.axvline(idx[series_size], linestyle="dotted")
 
     fig.plot(idx[:series_size], series, label="train series", color="blue", alpha=0.8)
-    fig.plot(idx[series_size:series_size+val_series_size], val_series, label="val series", color="green", alpha=0.8)
+    fig.plot(idx[series_size:series_size+val_series_size], val_series, label="validate series", color="green", alpha=0.8)
     
     forecast_idx = idx[series_size:series_size+forecast_series_size]
     fig.plot(forecast_idx, forecast_series, label="forecast series", color="red")
