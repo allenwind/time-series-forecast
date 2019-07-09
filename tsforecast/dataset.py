@@ -101,7 +101,7 @@ def random_fourier_series(size=1000, n=50):
     for a, b in zip(an, bn):
         s += 1
         y += a * np.cos(s*x) + b * np.sin(s*x)
-    return _add_noise(y, add=True, multiply=False)
+    return _add_noise(y, add=True, multiply=True)
 
 def chaos_series(size=1000):
     # chaos r = 3.88
