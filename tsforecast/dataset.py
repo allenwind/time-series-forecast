@@ -129,7 +129,7 @@ def repeat_random_series():
     series.extend(s4)
     series.extend(s3)
     series = series * 10
-    return np.array(series)
+    return _add_trend(np.array(series), shape="exp")
 
 def autoregression_series(size=1000, p=5):
     ws = np.random.normal(size=p) # 生成随机权重

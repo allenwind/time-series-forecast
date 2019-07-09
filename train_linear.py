@@ -14,6 +14,7 @@ def test():
     fn = datasets[-2]
     series = fn()
     size = find_time_series_max_periodic(series)
+    size = 100
 
     # k = find_time_series_degree(series)
     # sta = StationaryTransfer(k)

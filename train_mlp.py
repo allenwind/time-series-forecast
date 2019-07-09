@@ -15,6 +15,7 @@ def test():
     fn = datasets[-2]
     series = fn()
     size = find_time_series_max_periodic(series)
+    size = 100
 
     scaler = SimpleScaler()
     series = scaler.fit_transform(series)
