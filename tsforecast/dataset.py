@@ -9,6 +9,8 @@ from sklearn.preprocessing import MinMaxScaler
 from scipy import signal
 from dateutil import parser as dparser
 
+from .utils import Rolling
+
 # np.random.seed(2**32 - 26)
 
 # 用于测试模型效果的数据集, 包括
@@ -81,7 +83,7 @@ def multi_periodic_function(size=1000):
         1/5 * np.sin(15*x) + 1/5 * np.cos(14*x)
     return _add_noise(y, add=True, multiply=False)
 
-def random_fourier_series(size=1000, n=100):
+def random_fourier_series(size=1000, n=50):
     # random fourier series
     # 随机傅里叶序列, 用于模拟复杂的多周期时序数据
     # 傅里叶级数的系数是随机生成的, 服从均匀分布
@@ -99,7 +101,7 @@ def random_fourier_series(size=1000, n=100):
     for a, b in zip(an, bn):
         s += 1
         y += a * np.cos(s*x) + b * np.sin(s*x)
-    return _add_noise(y, add=False, multiply=False)
+    return _add_noise(y, add=True, multiply=False)
 
 def chaos_series(size=1000):
     # chaos r = 3.88
@@ -115,6 +117,33 @@ def chaos_series(size=1000):
         y.append(x)
         x0 = x
     return np.array(y)
+
+def repeat_random_series():
+    s1 = np.random.normal(size=25).tolist()
+    s2 = np.random.uniform(size=25).tolist()
+    s3 = np.random.uniform(low=-1,high=1,size=25)
+    s4 = np.random.normal(loc=0, scale=2, size=25)
+    series = []
+    series.extend(s1)
+    series.extend(s2)
+    series.extend(s4)
+    series.extend(s3)
+    series = series * 10
+    return np.array(series)
+
+def autoregression_series(size=1000, p=5):
+    ws = np.random.normal(size=p) # 生成随机权重
+    v0 = np.random.uniform(size=p) # 初始化序列
+    r = Rolling(size=p)
+    r.updates(v0)
+
+    values = v0.tolist()
+    for _ in range(size-p):
+        s = r.slide()
+        v = np.sum(np.array(s) * ws)
+        values.append(v)
+        r.update(v)
+    return np.array(values)
 
 def airline_passengers(size=1000, resample=True):
     # 真实数据, 国际航空航班数据
@@ -198,6 +227,8 @@ def list_datasets():
           dogfood_cpu,
           dogfood_disk,
           dogfood_memory,
+          repeat_random_series,
+          autoregression_series,
           ] 
     return ds
 

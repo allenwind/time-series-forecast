@@ -9,11 +9,12 @@ from tsforecast import train_val_split, SimpleScaler, eval_model, datasets
 from tsforecast import find_time_series_degree, StationaryTransfer
 from tsforecast import MLPForecaster
 from tsforecast import time_series_move_lag
+from tsforecast.tsfeatures.utils import find_time_series_max_periodic
 
 def test():
-    fn = datasets[3]
+    fn = datasets[-2]
     series = fn()
-    size = 200
+    size = find_time_series_max_periodic(series)
 
     scaler = SimpleScaler()
     series = scaler.fit_transform(series)

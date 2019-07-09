@@ -8,11 +8,12 @@ from tsforecast import train_val_split, SimpleScaler, eval_model, datasets
 from tsforecast import find_time_series_degree, StationaryTransfer
 from tsforecast import LinearForecaster
 from tsforecast import time_series_move_lag
+from tsforecast.tsfeatures.utils import find_time_series_max_periodic
 
 def test():
-    fn = datasets[6]
+    fn = datasets[-2]
     series = fn()
-    size = 200
+    size = find_time_series_max_periodic(series)
 
     # k = find_time_series_degree(series)
     # sta = StationaryTransfer(k)
@@ -25,7 +26,7 @@ def test():
     m = LinearForecaster(size)
     m.fit(s1, epochs=300, batch_size=100, validation_series=s2)
     y_predict = m.predict(2*len(s2))
-    y_predict = time_series_move_lag(y_predict, pad="mean")
+    y_predict = time_series_move_lag(y_predict, pad="first")
 
     eval_model(m, s1, s2, y_predict, 20, fn.__name__, bound=True)
 

@@ -100,7 +100,7 @@ def visualize_autocorrelation(series, offset=0):
     plt.subplot(211)
     plt.plot(series)
     plt.subplot(212)
-    plt.plot(auto[offset:])
+    plt.plot(auto[offset:], "+")
     plt.show()
 
 def timestamp2datetime(ts):

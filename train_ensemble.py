@@ -13,14 +13,14 @@ from tsforecast import time_series_move_lag, view_rolling_features, visualize_au
 from tsforecast.tsfeatures.utils import find_time_series_max_periodic
 
 def test():
-    fn = datasets[5]
-    series = fn(resample=False)
+    fn = datasets[3]
+    series = fn()
 
-    series = np.log(np.log(series))
-    series = np.diff(series)
-    visualize_autocorrelation(series, offset=1)
-    size = find_time_series_max_periodic(series)
-    print(size)
+    # series = np.log(np.log(series))
+    # series = np.diff(series)
+    # visualize_autocorrelation(series, offset=1)
+    # size = find_time_series_max_periodic(series)
+    size = 200
 
     # k = find_time_series_degree(series)
     # sta = StationaryTransfer(k)
@@ -37,6 +37,9 @@ def test():
     y_predict = time_series_move_lag(y_predict, pad="mean")
 
     eval_model(m, s1, s2, y_predict, 20, fn.__name__, bound=True)
+
+    plt.plot(m.model.feature_importances_, "+")
+    plt.show()
 
 if __name__ == "__main__":
     test()
