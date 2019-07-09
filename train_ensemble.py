@@ -16,6 +16,7 @@ def test():
     fn = datasets[3]
     series = fn()
     size = find_time_series_max_periodic(series)
+    size = 200
 
     # series = np.log(np.log(series))
     # series = np.diff(series)

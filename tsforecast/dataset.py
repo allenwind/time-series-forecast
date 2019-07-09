@@ -1,6 +1,7 @@
 import argparse
 import glob
 import os
+import random
 
 import numpy as np
 import pandas as pd
@@ -33,6 +34,18 @@ def _add_noise(y, add=True, multiply=False):
     else:
         mnoise = 0
     return y * (1 + mnoise) + anoise
+
+def _add_anomaly(y, ans=10):
+    size = len(y)
+    u = np.max(y)
+    l = np.min(y)
+
+    a = np.zeros(size)
+    for _ in range(ans):
+        i = np.random.randint(low=0, high=size-1, size=1)
+        v = random.choice([u, l])
+        a[i] = 3 * v
+    return y + a
 
 def _add_trend(y, shape="s", add=True, multiply=False):
     # shape in ("s", "linear", "log", "exp", "square", "sqrt")
@@ -83,7 +96,7 @@ def multi_periodic_function(size=1000):
         1/5 * np.sin(15*x) + 1/5 * np.cos(14*x)
     return _add_noise(y, add=True, multiply=False)
 
-def random_fourier_series(size=1000, n=50):
+def random_fourier_series(size=1000, n=10):
     # random fourier series
     # 随机傅里叶序列, 用于模拟复杂的多周期时序数据
     # 傅里叶级数的系数是随机生成的, 服从均匀分布
@@ -101,7 +114,7 @@ def random_fourier_series(size=1000, n=50):
     for a, b in zip(an, bn):
         s += 1
         y += a * np.cos(s*x) + b * np.sin(s*x)
-    return _add_noise(y, add=True, multiply=True)
+    return _add_noise(y, add=False, multiply=False)
 
 def chaos_series(size=1000):
     # chaos r = 3.88
