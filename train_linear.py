@@ -11,9 +11,10 @@ from tsforecast import time_series_move_lag
 from tsforecast.tsfeatures.utils import find_time_series_max_periodic
 
 def test():
-    fn = datasets[3]
+    fn = datasets[5]
     series = fn()
     size = find_time_series_max_periodic(series)
+    size = 13
 
     # k = find_time_series_degree(series)
     # sta = StationaryTransfer(k)

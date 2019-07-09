@@ -15,13 +15,12 @@ class LSTMForecaster(Forecaster):
 
     def __init__(self, size, n_features=1):
         # input_shape (batch_size, timesteps, ndims)
-        n_features = 1
         self.n_steps = size
-        self.n_features = n_features
+        self.n_features = 1
 
         inputs = Input(shape=(self.n_steps, self.n_features))
-        x = LSTM(size)(inputs)
-        outputs = Dense(1)(x)
+        x = LSTM(size, stateful=False)(inputs)
+        outputs = Dense(1, activation="relu")(x)
         model = Model(inputs, outputs)
         model.compile(optimizer="adam", loss=mean_absolute_percentage_error)
 

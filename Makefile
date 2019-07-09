@@ -32,6 +32,10 @@ mlp:
 	rm weights/*
 	python3 train_mlp.py
 
+.PHONY: lstm
+lstm:
+	python3 train_lstm.py
+
 .PHONY: ensemble
 ensemble:
 	python3 train_ensemble.py

@@ -145,7 +145,7 @@ def autoregression_series(size=1000, p=5):
         r.update(v)
     return np.array(values)
 
-def airline_passengers(size=1000, resample=True):
+def airline_passengers(size=1000, resample=False):
     # 真实数据, 国际航空航班数据
     # airline-passengers
     # 由于数据只有一百多个, 对于神经网络训练来说并不够
