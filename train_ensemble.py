@@ -39,5 +39,7 @@ def test():
 
     eval_model(m, s1, s2, y_predict, 20, fn.__name__, bound=True)
 
+    m.plot_features()
+
 if __name__ == "__main__":
     test()

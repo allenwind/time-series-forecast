@@ -2,6 +2,8 @@ from sklearn.ensemble import AdaBoostRegressor
 from sklearn.ensemble import BaggingRegressor
 from sklearn.linear_model import LinearRegression
 from xgboost import XGBRegressor
+from xgboost import plot_importance
+import matplotlib.pyplot as plt
 
 from .linear import LinearForecaster
 from .utils import FeaturesRolling
@@ -49,3 +51,7 @@ class XGBForecaster(LinearForecaster):
             booster=booster,
             n_jobs=-1,
         )
+
+    def plot_features(self):
+        plot_importance(self.model)
+        plt.show()
