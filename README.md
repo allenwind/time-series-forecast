@@ -9,17 +9,12 @@
 
 进行时序预测建模我们使用如下模型:
 
-1. 线性模型
+1. 线性模型 ARIMA
 2. 集成模型(XGBoost)
-3. ARIMA
-4. Prophet(Facebook开源的预测工具)
-5. 前馈神经网络
-6. 卷积神经网络
-7. 循环神经网络
-
-## prediction .vs. forecast
-
-prediction 和 forecast 并不是完全相等的概念. prediction 范畴更大, forecast 则处理带时间步的 prediction.
+3. Prophet(Facebook开源的预测工具)
+4. 前馈神经网络
+5. 卷积神经网络
+6. 循环神经网络
 
 ## 基本原理
 
@@ -34,7 +29,7 @@ prediction 和 forecast 并不是完全相等的概念. prediction 范畴更大,
 
 时间外推法有很大的局限性, 仅能捕捉到时序中的长期依赖关系. 因此, 接下的建模我们值使用自回归方法. 
 
-### 转化为带标注数据
+## 转化为带标注数据
 
 时间序列数据没有带标注, 而带监督的机器学习学习模型的训练需要定义输入与输出, 那么怎么把时间序列数据转化为带标注的形式呢？
 
@@ -42,15 +37,15 @@ prediction 和 forecast 并不是完全相等的概念. prediction 范畴更大,
 
 ![how-to-label-data](./png/how-to-labeling-time-series.png)
 
-### preprocessing
+## 预处理
 
 预处理包括如下:
 1. 缺失值处理
-1. 白噪声检验或随机游走检验
-2. 去噪
-3. 平稳化
-4. 数据正太化
-5. 归一化
+2. 白噪声检验或随机游走检验
+3. 去噪
+4. 平稳化
+5. 数据正太化
+6. 归一化
 
 原始时序中包含大量噪声, 可以使用如下方法去噪:
 
@@ -69,7 +64,7 @@ https://machinelearningmastery.com/how-to-transform-data-to-fit-the-normal-distr
 
 https://en.wikipedia.org/wiki/Log-normal_distribution
 
-### features
+## 特征工程
 
 1. 普通特征 (统计特征、拟合特征、分类特征)
 2. dtw & wavelet
@@ -84,11 +79,11 @@ https://en.wikipedia.org/wiki/Log-normal_distribution
 
 特征重要性评估
 
-### 使用统一的评估指标
+## 使用统一的评估指标
 
 统一使用 MAPE 作为模型的评估指标.
 
-### 训练与预测
+## 训练与预测
 
 建模方法：
 
@@ -104,7 +99,7 @@ https://en.wikipedia.org/wiki/Log-normal_distribution
 3. 多步输出策略
 4. 混合策略
 
-这些策略的详细解释和说明参考 [papers](url)
+这些策略的详细解释和说明参考 Machine Learning Strategies for Time Series Forecasting.
 
 直接多步预测: 建模获得预测值后, 使用新的模型再预测下一个值, 以此类推
 递归多步预测: 
@@ -122,51 +117,8 @@ https://en.wikipedia.org/wiki/Log-normal_distribution
 
 ![how-to-forecast-time-series](./png/how-to-forecast-time-series.gif)
 
-### 处理过拟合
 
-1. 谱正则化 & L1 L2
-2. EarlyStopping
-3. callback save best model
-4. 权重滑动平均
-
-谱正则化是从L约束中推导出来, 可以看做是L2正则化的加强版本. 使用时我们直接把它嵌入到隐层中.
-
-EarlyStopping 通过监控模型训练的收敛情况, 提早跳出不收敛或面临过拟合的训练.
-
-最后通过每一个 epoch 比较上一个 epoch 的验证效果, 选择做好的模型保存. 预测则是使用最好的模型保存.
-
-权重滑动平均提高训练的稳定性.
-  
-## 数学与基本概念
-
-使用数学方法建模进行时间序列预测有如下思路：
-
-1. 基于均方误差的多项式拟合
-2. 基于对增长率的变化进行微分方程建模
-3. 统计方法 (频率主义方法 & 贝叶斯方法)(统计学方法依旧可以使用滑动窗口方法)
-4. 随机过程与谱分析
-
-魏尔斯特拉斯逼近定理表明在给定区间上的连续函数可以使用多项式去逼近，但用到预测上并不好使：
-
-1. 数据有噪声，多项式逼近容易过拟合
-2. 龙格现象，高次多项式在区间边缘出现剧烈的震荡
-
-魏尔斯特拉斯逼近定理只是函数可以使用多项式逼近的存在性证明，没有告诉我们如何寻找这样的多项式. 我们可能会想，可以使用泰勒级数或傅里叶级数(使用有线的正弦波的叠加逼近拟合函数, 但是会出现吉布斯现象).
-
-更严重的是, 多项式在外推时面临爆炸性(预测值变为无穷)的问题
-
-总结：
-
-- 多项式的最小二乘问题，龙格现象
-- 三角级数的最小二乘问题，吉布斯现象
-
-## 数据
-
-训练与检验模型的数据集:
-
-![dataset](./png/time-series-dataset.png)
-
-## linear
+## sliding-window-based linear model
 
 在滑动窗口提取特征的基础上, 我们实现线性模型, 预测效果如下
 
@@ -185,7 +137,20 @@ EarlyStopping 通过监控模型训练的收敛情况, 提早跳出不收敛或�
 
 如何确定输入的大小？因为我们需要模型学习到数据中潜在的规律（增长、周期）
 
-## mlp (单隐层前馈神经网络)
+原理部分我们会解释, 这个模型本质上是 ARMA.
+
+处理过拟合
+
+## XGBoost
+
+ensemble 进行时序预测的思路是先对非平稳序列进行平稳化, 然后使用 ensemble 相关的模型进行训练
+与预测, 把预测结果再转化为原来的非平稳序列.
+
+平稳序列 + XGBoost
+
+处理过拟合
+
+## MLP (前馈神经网络)
 
 MLP 在时间序列预测中的实现可以看做是非线性自回归模型,
 
@@ -201,20 +166,24 @@ MLP 在时间序列预测中的实现可以看做是非线性自回归模型,
 基于 MLP 的预测效果演示4：
 ![MLP-4](./png/MLP-4.png)
 
-## cnn
+1. 谱正则化 & L1 L2
+2. EarlyStopping
+3. callback save best model
+4. 权重滑动平均
 
-CNN 的训练效率对比于 MLP 很慢, 目前先不加入模型集合中.
+谱正则化是从L约束中推导出来, 可以看做是L2正则化的加强版本. 使用时我们直接把它嵌入到隐层中.
 
-## lstm
+EarlyStopping 通过监控模型训练的收敛情况, 提早跳出不收敛或面临过拟合的训练.
+
+最后通过每一个 epoch 比较上一个 epoch 的验证效果, 选择做好的模型保存. 预测则是使用最好的模型保存.
+
+权重滑动平均提高训练的稳定性.
+
+## LSTM
 
 LSTM 的训练效率比 MLP 更慢, 目前先不加入模型集合中.
 
-## ensemble
-
-ensemble 进行时序预测的思路是先对非平稳序列进行平稳化, 然后使用 ensemble 相关的模型进行训练
-与预测, 把预测结果再转化为原来的非平稳序列.
-
-平稳序列 + XGBoost
+LSTM 处理过拟合和 MLP 处理过拟合是相似的, 不详细讲述.
 
 ## 误差估计
 
@@ -222,39 +191,35 @@ ensemble 进行时序预测的思路是先对非平稳序列进行平稳化, 然
 
 长时间步预测的问题
 
+## 模型对比
+
+
+
+## 预测效果
+
+
+
+## 预测失效情况
+
+什么情况下预测不可用
+
+伪随机数
 
 ## 解释
 
-滑动窗口本质上是 AR 模型，
+以上模型的原理和分析请参考:
+
+详细参考[原理分析部分](./markdown/NAR.md)
+
+有关的数学讨论参考[数学原理部分](./markdown/math.md)
 
 
-## 应用
 
-1. 资源类指标的预测
-2. 性能类指标预测
-
-其他时间序列问题
-
-我们从 octopus 获取的数据有不同的使用阶段, 我们需要算法对时序数据进行分割
-
-解决思路：
-
-1. 数学分析
-2. 统计学 (k-s test MLE MAPE)
-3. 机器学习
-
-时序分割示例1 (dogfood 内存)：
-![time-series-segmentation-by-k-sigma](./png/time-series-segmentation-by-k-sigma.png)
-
-时序分割示例2 (dogfood 存储空间)：
-![time-series-segmentation-2](./png/time-series-segmentation-2.png)
-
-参考[时间序列特征工程repo](url)
 
 ## TODO
 
-参考[TODO](url)
+参考[TODO部分](./TODO.md)
 
-## 参考
+## 参考资料
 
 1. https://otexts.com/fpp2/
