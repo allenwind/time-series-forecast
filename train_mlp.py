@@ -12,7 +12,7 @@ from tsforecast import time_series_move_lag
 from tsforecast.tsfeatures.utils import find_time_series_max_periodic
 
 def test():
-    fn = datasets[3]
+    fn = datasets[-2]
     series = fn()
     size = find_time_series_max_periodic(series)
     size = 200
@@ -22,11 +22,11 @@ def test():
     s1, s2 = train_val_split(series, train_rate=0.7)
 
     m = MLPForecaster(size, with_norm=True)
-    m.fit(s1, epochs=300, batch_size=100, validation_series=s2)
+    m.fit(s1, epochs=300, batch_size=100, validation_series=s2, save_best=True)
     y_predict = m.predict(2*len(s2))
     y_predict = time_series_move_lag(y_predict, pad="first")
 
-    eval_model(m, s1, s2, y_predict, 20, fn.__name__, bound=False)
+    eval_model(m, s1, s2, y_predict, 20, fn.__name__, bound=True)
 
 if __name__ == "__main__":
     test()

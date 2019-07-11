@@ -201,7 +201,6 @@ class SaveBestModelOnMemory(Callback):
         self.epochs_since_last_save += 1
         if self.epochs_since_last_save >= self.period:
             self.epochs_since_last_save = 0
-            # filepath = self.filepath.format(epoch=epoch + 1, **logs)
             current = logs.get(self.monitor)
             if current is None:
                 warnings.warn('Can pick best model only with %s available, '

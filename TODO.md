@@ -11,6 +11,7 @@
 9. 计算时序潜在最大周期 (done)
 10. 处理预测 lag=1 的滞后问题 (done)
 11. XGBoost callback
+12. 预处理部分模块化
 
 ## Q&A
 

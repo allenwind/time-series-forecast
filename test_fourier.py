@@ -11,10 +11,10 @@ from tsforecast import XGBForecaster
 
 def test():
     fn = datasets[3]
-    series = fn()
+    series = fn(n=5)
     size = 200
 
-    d = np.fft.fft(series).real
+    d = np.abs(np.fft.fft(series))
 
     plt.subplot(311)
     plt.plot(series)

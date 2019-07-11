@@ -96,7 +96,7 @@ def multi_periodic_function(size=1000):
         1/5 * np.sin(15*x) + 1/5 * np.cos(14*x)
     return _add_noise(y, add=True, multiply=False)
 
-def random_fourier_series(size=1000, n=10):
+def random_fourier_series(size=1000, n=50):
     # random fourier series
     # 随机傅里叶序列, 用于模拟复杂的多周期时序数据
     # 傅里叶级数的系数是随机生成的, 服从均匀分布
@@ -116,6 +116,9 @@ def random_fourier_series(size=1000, n=10):
         y += a * np.cos(s*x) + b * np.sin(s*x)
     return _add_noise(y, add=False, multiply=False)
 
+def random_fourier_series_with_change_phase(size=1000, n=50):
+    pass
+
 def chaos_series(size=1000):
     # chaos r = 3.88
     # 生成混沌序列, 这种方法可以生成伪随机数, 主要用于测试神经网络能否把
@@ -131,18 +134,19 @@ def chaos_series(size=1000):
         x0 = x
     return np.array(y)
 
-def repeat_random_series():
-    s1 = np.random.normal(size=25).tolist()
-    s2 = np.random.uniform(size=25).tolist()
-    s3 = np.random.uniform(low=-1,high=1,size=25)
-    s4 = np.random.normal(loc=0, scale=2, size=25)
+def repeat_random_series(size=1000):
+    s1 = np.random.normal(loc=0, scale=1, size=25)
+    s2 = np.random.uniform(low=-2, high=0, size=25)
+    s3 = np.random.uniform(low=-1, high=1, size=25)
+    s4 = np.random.normal(loc=1, scale=2, size=25)
     series = []
     series.extend(s1)
     series.extend(s2)
     series.extend(s4)
     series.extend(s3)
-    series = series * 10
-    return _add_trend(np.array(series), shape="exp")
+    series = np.array(series)
+    series = np.tile(series, size//len(series))
+    return _add_trend(_add_noise(series, add=True), shape="log")
 
 def autoregression_series(size=1000, p=5):
     ws = np.random.normal(size=p) # 生成随机权重

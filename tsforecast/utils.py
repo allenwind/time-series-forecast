@@ -4,6 +4,7 @@ import glob
 import io
 
 import numpy as np
+import numpy.fft as fft
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
 from statsmodels.tsa.stattools import adfuller
@@ -26,6 +27,17 @@ def check_white_noise(series):
     # wiki:
     # https://en.wikipedia.org/wiki/White_noise
     pass
+
+def check_time_series_periodic(series):
+    # 检测时间序列中周期性的强度
+    # 分段 DTW
+    pass
+
+def time_series_fourier_denoise(series):
+    fs = fft.rfft(series)
+    freqs = fft.rfftfreq(len(series), 0.1)
+    fs[freqs > threshold] = 0 # 过滤高频信号
+    return fft.irfft(fs)
 
 def check_random_walk(series):
     # 检测时间序列是否为随机游走

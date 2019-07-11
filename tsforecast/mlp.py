@@ -17,7 +17,7 @@ from .advance import SaveBestModelOnMemory
 
 class MLPForecaster(Forecaster):
 
-    def __init__(self, size, with_norm=True):
+    def __init__(self, size, with_norm=True, ema_up=False):
         inputs = Input(shape=(size,))
         x = BatchNormalization()(inputs)
         if with_norm:
@@ -38,18 +38,20 @@ class MLPForecaster(Forecaster):
 
         self.size = size
         self.model = model
-        # self.ema = WeightEMA(self.model)
-        # self.ema.inject()
+        self.ema_up = ema_up
+
+        if self.ema_up:
+            self.ema = WeightEMA(self.model)
+            self.ema.inject()
         self.roller = Rolling(size)
 
     def fit(self, series, epochs, batch_size, validation_series=None, save_best=True):
-        # self.ema.reset_old_weights()
+        if self.ema_up:
+            self.ema.reset_old_weights()
 
         self.save_best = save_best
         if save_best:
-            filepath = "weights/{epoch:02d}-{val_loss:.2f}.hdf5"
-            fn = ModelCheckpoint(filepath, save_best_only=True)
-            # fn = SaveBestModelOnMemory()
+            fn = SaveBestModelOnMemory()
             callbacks = [fn]
         else:
             callbacks = []
@@ -74,10 +76,9 @@ class MLPForecaster(Forecaster):
         self._init_roller(X, y)
     
     def predict(self, forecast_size, post_fit=False):
-        # self.ema.apply_ema_weights()
+        if self.ema_up:
+            self.ema.apply_ema_weights()
 
-        if self.save_best:
-            self.model.load_weights(find_best_model("."))
         y_predict = []
         for i in range(forecast_size):
             X = self.roller.slide().reshape((-1, self.size))
