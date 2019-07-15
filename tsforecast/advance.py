@@ -98,10 +98,8 @@ class SpectralNormalization:
 
 class HumanFeaturesExtractingLayer(Layer):
     
-    """自定义神经网络的人工特征提取层. 
-    features.py 中的特征提取无法直接
-    在神经网络中使用, 因为它无法参与到
-    梯度流运算中."""
+    """自定义神经网络的人工特征提取层.
+    """
 
     def __init__(self, output_dim, **kwargs):
         self.output_dim = output_dim
@@ -178,8 +176,8 @@ class SaveBestModelOnMemory(Callback):
     更高效, 因为后者会把模型存储到磁盘上并带来较大的存储空间开销.
     如果要配合 EarlyStopping 使用, 需要合理的 stop 机制.
 
-    由于当前的运用场景是时序预测, 因此只实现了 min mode
-    monitor 只支持 val_loss.
+    由于当前的运用场景是时序预测, 因此只实现了 min mode monitor 
+    只支持 val_loss.
     """
 
     def __init__(self, monitor='val_loss', verbose=0, mode='min', period=1):
@@ -201,13 +199,12 @@ class SaveBestModelOnMemory(Callback):
         self.epochs_since_last_save += 1
         if self.epochs_since_last_save >= self.period:
             self.epochs_since_last_save = 0
-            current = logs.get(self.monitor)
+            current = logs.get(self.monitor, None)
             if current is None:
-                warnings.warn('Can pick best model only with %s available, '
-                              'skipping.' % (self.monitor), RuntimeWarning)
+                print("only support", self.monitor)
             else:
+                # 满足条件更新权重
                 if self.monitor_op(current, self.best):
-                    # update weights
                     self.best = current
                     self.best_epochs = epoch + 1
                     self.best_weights = self.model.get_weights()            
