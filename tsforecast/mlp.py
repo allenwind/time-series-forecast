@@ -5,13 +5,14 @@ from keras.layers import BatchNormalization
 from keras.models import Model
 from keras.callbacks import ModelCheckpoint
 from keras.losses import mean_absolute_percentage_error
+from keras.initializers import RandomNormal, he_normal
 from keras import backend as K
 
 from .utils import Rolling, TimeSeriesTransfer, find_best_model
 from .base import Forecaster
 from .advance import SpectralNormalization, WeightEMA, gelu
 from .advance import adam, symmetric_mean_absolute_percentage_error
-from .advance import SaveBestModelOnMemory
+from .advance import SaveBestModelOnMemory, calculate_batch_size
 
 # 前馈神经网络时序预测
 
@@ -23,13 +24,13 @@ class MLPForecaster(Forecaster):
         if with_norm:
             x = SpectralNormalization(Dense(units=2*size-1, 
                                             activation=gelu,
-                                            kernel_initializer="random_normal",
-                                            bias_initializer="random_normal"))(inputs)
+                                            kernel_initializer=he_normal(),
+                                            bias_initializer=he_normal()))(inputs)
         else:
             x = Dense(units=2*size-1, 
                       activation=gelu,
-                      kernel_initializer="random_normal",
-                      bias_initializer="random_normal")(inputs)
+                      kernel_initializer=RandomNormal(mean=0,stddev=0.01),
+                      bias_initializer=RandomNormal(mean=0,stddev=0.01))(inputs)
 
         # x = Dense(size, activation="relu")(x)
         outputs = Dense(1, activation="relu")(x)
@@ -55,6 +56,9 @@ class MLPForecaster(Forecaster):
             callbacks = [fn]
         else:
             callbacks = []
+
+        if not batch_size:
+            batch_size = calculate_batch_size(series, vseries, self.size)
 
         transfer = TimeSeriesTransfer(series)
         X, y = transfer.transform(self.size)

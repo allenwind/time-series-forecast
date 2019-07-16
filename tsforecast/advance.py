@@ -155,8 +155,14 @@ def time_series_pct(y_true, y_pred):
 pct = time_series_pct
 
 def lr_schedule(epoch):
-    """动态学习率, 目前默认初始值为 1e-4 * 3"""
+    """动态学习率, 目前默认初始值为 1e-4 * 3
+    学习率预热 1e-7"""
 
+    # 学习率预热
+    if epoch < 20:
+        return 1e-7
+
+    # 分段调整学习率
     lr = 1e-4 * 3
     if epoch > 180:
         lr *= 0.5e-3
@@ -211,6 +217,18 @@ class SaveBestModelOnMemory(Callback):
                     
     def on_train_end(self, logs=None):
         self.model.set_weights(self.best_weights)
+
+def calculate_batch_size(series, vseries, ws):
+    # 计算 batch 大小
+    # TODO 设计更合理的方式
+    c = len(series) - ws + 1
+    cv = len(vseries) - ws + 1
+    bs = max(1, min(c // 10, cv // 4))
+    return bs
+
+# TODO 添加梯度截断
+# 因为数据训练过程中，出现梯度突然增大的情况
+# 这是有与损失函数的特性导致
 
 get_custom_objects().update({"gelu": Activation(gelu)})
 adam = Adam(lr=lr_schedule(0)) # 自调节学习率的 adam 优化算法
