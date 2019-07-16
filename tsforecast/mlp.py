@@ -24,13 +24,13 @@ class MLPForecaster(Forecaster):
         if with_norm:
             x = SpectralNormalization(Dense(units=2*size-1, 
                                             activation=gelu,
-                                            kernel_initializer=he_normal(),
-                                            bias_initializer=he_normal()))(inputs)
+                                            kernel_initializer="random_normal",
+                                            bias_initializer="random_normal"))(inputs)
         else:
             x = Dense(units=2*size-1, 
                       activation=gelu,
-                      kernel_initializer=RandomNormal(mean=0,stddev=0.01),
-                      bias_initializer=RandomNormal(mean=0,stddev=0.01))(inputs)
+                      kernel_initializer="random_normal",
+                      bias_initializer="random_normal")(inputs)
 
         # x = Dense(size, activation="relu")(x)
         outputs = Dense(1, activation="relu")(x)

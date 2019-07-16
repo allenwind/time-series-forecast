@@ -159,8 +159,9 @@ def lr_schedule(epoch):
     学习率预热 1e-7"""
 
     # 学习率预热
-    if epoch < 20:
-        return 1e-7
+    # 前 20 个 epochs 使用小的、固定的学习率
+    # if epoch < 20:
+    #   return 1e-7
 
     # 分段调整学习率
     lr = 1e-4 * 3

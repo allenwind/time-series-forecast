@@ -85,7 +85,9 @@ $$
 $$
 
 
-这个 $f$ 就是我们要训练的模型， 如神经网络， XGBoost. 当它为线性模型时， 就化成我们常见的自回归模型. 为直观表示, 可以写成矩阵形式:
+这个 $f$ 就是我们要训练的模型， 如神经网络， XGBoost. 如果不考虑输出，这个结构可以看着时间序列的 encoder。
+
+当它为线性模型时， 就化成我们常见的自回归模型. 为直观表示, 可以写成矩阵形式:
 
 $$
 \left[\begin{array}{c}{y_{1}} \\ {y_{2}} \\ {y_{3}} \\ {\vdots} \\ {y_{t}}\end{array}\right]=\left[\begin{array}{cccc}{y_{0}} & {y_{-1}} & {y_{-2}} & {\dots} \\ {y_{1}} & {y_{0}} & {y_{-1}} & {\dots} \\ {y_{2}} & {y_{1}} & {y_{0}} & {\dots} \\ {\vdots} & {\vdots} & {\vdots} & {\ddots} \\ {y_{t-1}} & {y_{t-2}} & {y_{t-3}} & {\cdots}\end{array}\right]\left[\begin{array}{l}{f} \\ {f} \\ {f} \\ {\vdots} \\ {f}\end{array}\right]
@@ -97,7 +99,7 @@ $$
 \mathbf{y}_{t+1}=f \circ g \left(\mathbf{y}_{t}, \mathbf{y}_{t-1}, \cdots, \mathbf{y}_{t-p+1}\right) \tag{6}
 $$
 
-模型训练和特征提取可以表达成复合函数形式.
+模型训练和特征提取可以表达成复合函数形式. 依赖关系体现在时间窗口中，模型尝试学习这种依赖关系。
 
 这种模型有一定的局限, 就是学习长期依赖, 为此, 可以改成如下形式:
 
