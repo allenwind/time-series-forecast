@@ -10,7 +10,7 @@ from sklearn.preprocessing import MinMaxScaler
 from statsmodels.tsa.stattools import adfuller
 
 from .tsfeatures import extract_time_series_forecast_features
-from .tsfeatures import find_time_series_max_periodic
+from .tsfeatures.utils import find_time_series_max_periodic
 from .tsfeatures.autocorrelation import time_series_all_autocorrelation
 from .errors import eval_errors
 

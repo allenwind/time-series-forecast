@@ -20,7 +20,6 @@ class MLPForecaster(Forecaster):
 
     def __init__(self, size, with_norm=True, ema_up=False):
         inputs = Input(shape=(size,))
-        x = BatchNormalization()(inputs)
         if with_norm:
             x = SpectralNormalization(Dense(units=2*size-1, 
                                             activation=gelu,
@@ -32,7 +31,6 @@ class MLPForecaster(Forecaster):
                       kernel_initializer="random_normal",
                       bias_initializer="random_normal")(inputs)
 
-        # x = Dense(size, activation="relu")(x)
         outputs = Dense(1, activation="relu")(x)
         model = Model(inputs, outputs)
         model.compile(optimizer=adam, loss=mean_absolute_percentage_error)

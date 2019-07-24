@@ -229,3 +229,4 @@ LSTM 处理过拟合和 MLP 处理过拟合是相似的, 不详细讲述.
 ## 参考资料
 
 1. https://otexts.com/fpp2/
+2. http://www.oxford-man.ox.ac.uk/sites/default/files/events/combination_Sofie.pdf

@@ -9,6 +9,9 @@ from keras.layers import Activation
 from keras.utils.generic_utils import get_custom_objects
 
 # 训练神经网络的高级技巧
+# TODO 添加梯度截断
+# 因为数据训练过程中，出现梯度突然增大的情况
+# 损失函数的特性相关
 
 def gelu(x):
     """gelu 激活函数
@@ -22,12 +25,6 @@ def gelu(x):
     const = K.sqrt(2/K.constant(np.pi))
     cdf = 0.5 * (1 + K.tanh(const * (x + 0.044715 * K.pow(x, 3))))
     return x * cdf
-
-class SGLDOptimizer:
-    """Stochastic gradient langevin dynamics optimizer
-
-    wiki: https://en.wikipedia.org/wiki/Stochastic_gradient_Langevin_dynamics
-    """
 
 class WeightEMA:
 
@@ -226,10 +223,6 @@ def calculate_batch_size(series, vseries, ws):
     cv = len(vseries) - ws + 1
     bs = max(1, min(c // 10, cv // 4))
     return bs
-
-# TODO 添加梯度截断
-# 因为数据训练过程中，出现梯度突然增大的情况
-# 这是有与损失函数的特性导致
 
 get_custom_objects().update({"gelu": Activation(gelu)})
 adam = Adam(lr=lr_schedule(0)) # 自调节学习率的 adam 优化算法
