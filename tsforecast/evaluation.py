@@ -48,6 +48,16 @@ def eval_model(model, series, val_series, forecast_series, size, dataset="", bou
         box = fig.get_position()
         fig.set_position([box.x0, box.y0, box.width * 0.9, box.height])
         fig.legend(loc="upper left", bbox_to_anchor=(1, 0.5))
+
+    elif hasattr(model, "evals_result"):
+        fig = plt.subplot(212)
+        results = model.evals_result()
+        plt.plot(results["validation_0"]["error"], "b", label="train")
+        plt.plot(results["validation_1"]["error"], "r", label="valid")
+        plt.legend(loc="best")
+        plt.title("xgboost learning curve")
+        if show:
+            plt.show()
     else:
         fig = plt.subplot(212)
         plt.text(0.5, 0.5, "no history found", size=20, ha="left", va="center", alpha=0.5)
@@ -57,3 +67,5 @@ def eval_model(model, series, val_series, forecast_series, size, dataset="", bou
     else:
         plt.suptitle("eval model")
     plt.show()
+
+
