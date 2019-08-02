@@ -3,6 +3,7 @@ from sklearn.ensemble import BaggingRegressor
 from sklearn.linear_model import LinearRegression
 from xgboost import XGBRegressor
 from xgboost import plot_importance
+from xgboost.callback import early_stop
 import matplotlib.pyplot as plt
 
 from .linear import LinearForecaster
@@ -51,6 +52,16 @@ class XGBForecaster(LinearForecaster):
             booster=booster,
             n_jobs=-1,
         )
+
+    def fit(self, series, epochs=None, batch_size=None, validation_series=None):
+        transfer = FeaturesTimeSeriesTransfer(series)
+
+        # 初始化预测窗口
+        self._init_roller(*transfer.transform(self.size))
+
+        X, y = transfer.transform_features(self.size)
+        callbacks = [early_stop(stopping_rounds=20)]
+        self.model.fit(X, y, callbacks=callbacks)
 
     def plot_features(self):
         plot_importance(self.model)

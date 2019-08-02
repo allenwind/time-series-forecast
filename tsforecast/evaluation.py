@@ -40,6 +40,7 @@ def eval_model(model, series, val_series, forecast_series, size, dataset="", bou
     fig.legend(loc="upper left", bbox_to_anchor=(1, 0.5))
 
     if hasattr(model, "history"):
+        # 神经网络的 learning curve
         fig = plt.subplot(212)
         fig.plot(model.history.history["loss"], color="blue", label="train loss")
         fig.plot(model.history.history["val_loss"], color="red", label="val loss")
@@ -50,14 +51,15 @@ def eval_model(model, series, val_series, forecast_series, size, dataset="", bou
         fig.legend(loc="upper left", bbox_to_anchor=(1, 0.5))
 
     elif hasattr(model, "evals_result"):
+        # xgboost learning curve
         fig = plt.subplot(212)
         results = model.evals_result()
         plt.plot(results["validation_0"]["error"], "b", label="train")
         plt.plot(results["validation_1"]["error"], "r", label="valid")
+        plt.xlabel("epochs")
+        plt.ylabel("loss")
         plt.legend(loc="best")
         plt.title("xgboost learning curve")
-        if show:
-            plt.show()
     else:
         fig = plt.subplot(212)
         plt.text(0.5, 0.5, "no history found", size=20, ha="left", va="center", alpha=0.5)
@@ -66,6 +68,7 @@ def eval_model(model, series, val_series, forecast_series, size, dataset="", bou
         plt.suptitle("dataset:{} mape:{:.2f}".format(dataset, mape))
     else:
         plt.suptitle("eval model")
+
     plt.show()
 
 

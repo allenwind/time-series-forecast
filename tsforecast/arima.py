@@ -43,7 +43,6 @@ def find_optimal_pq_with_bic(timeseries, d=1, p_max=None, q_max=None):
 class ARIMAForecaster(Forecaster):
 
     # ARIMA 模型
-    # 目前 statsmodel 模块不支持 mape metric
 
     def __init__(self, size):
         self.size = size

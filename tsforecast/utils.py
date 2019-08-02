@@ -1,12 +1,12 @@
 import collections
 import datetime
 import glob
-import io
 
 import numpy as np
 import numpy.fft as fft
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import StandardScaler
 from statsmodels.tsa.stattools import adfuller
 
 from .tsfeatures import extract_time_series_forecast_features
@@ -133,10 +133,6 @@ def timestamp2datetime(ts):
 def timestamps2datetimes(mts):
     return [timestamp2datetime(ts) for ts in mts]
 
-def find_best_model(filepath="weights"):
-    files = glob.glob("weights/*.hdf5".format(filepath))
-    return min(files, key=lambda r: float(r.split("-")[-1].split(".hdf5")[0]))
-
 def train_val_split(series, train_rate=0.7, test_rate=0.7):
     # 训练与检验集的分离
     # TODO 交叉检验
@@ -157,12 +153,32 @@ def rolling_time_series(series, window_size, slide_size):
         step += 1
         yield series[begin:end]
 
-def sliding_window(series, size, step):
+def sliding_window(series, size, step=1):
+    # 把滑动窗口直接转换成矩阵形式
     w = np.hstack([series[i:i+i-size or None:step] for i in range(size)])
     return w.reshape((-1, size))
 
+def sliding_window_2d(X, size, step=1):
+    # 把滑动窗口直接转换成矩阵形式
+    n_features = X.shape[1]
+    w = np.array([X[i:i+i-size or None:step, :] for i in range(size)])
+    return w.reshape((-1, size))
+
+_row = lambda x: x
+
+def series2X(series, size, func=_row):
+    # 把时间序列转换为滑动窗口形式
+    X = np.array([series[i:i+size] for i in range(len(series)-size+1)])
+    return np.apply_along_axis(func, 1, X)
+
+def series2Xy(series, size, func=_row):
+    # 把时间序列转换为单步带标注形式数据
+    X = np.array([series[:-1][i:i+size] for i in range(len(series)-size)])
+    y = np.array(series[size:])
+    return np.apply_along_axis(func, 1, X), y
+
 class E2ETransfer:
-    
+
     # 端到端的数据转换, 包括:
     # 数据变换, 逆变换, 滤波
     # 离群点处理
@@ -178,13 +194,13 @@ class E2ETransfer:
 
 class SimpleScaler:
 
-    # 需要注意在神经网络训练时，如果feature range 在 (0,1) 区间
-    # 可能导致无法收敛，因为计算 loss 时出现 inf.
-
     EPS = 0.1
     
-    def __init__(self):
-        self.scaler = MinMaxScaler(feature_range=(self.EPS, 1+self.EPS))
+    def __init__(self, type="std"):
+        if type == "std":
+            self.scaler = StandardScaler()
+        else:
+            self.scaler = MinMaxScaler(feature_range=(self.EPS, 1+self.EPS))
 
     def fit(self, series):
         self.scaler.fit(series.reshape((-1, 1)))
@@ -348,7 +364,6 @@ class FeaturesTimeSeriesTransfer(TimeSeriesTransfer):
     def transform_features(self, window_size):
         X = []
         y = []
-
         for idx in range(self.size-window_size):
             raw = self.values[idx:idx+window_size]
             X.append(extract_time_series_forecast_features(raw))

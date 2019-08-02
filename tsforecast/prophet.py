@@ -13,6 +13,8 @@ from .base import Forecaster
 # 尝试用 Propeht 学习时序中的整体趋势, 接着用神经网络
 # 学习残差
 
+# TODO 改写成 sklearn API
+
 class ProphetForecaster(Forecaster, Prophet):
     pass
 

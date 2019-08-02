@@ -1,17 +1,14 @@
 import numpy as np
-from keras.layers import Input, Dense
-from keras.layers import Layer, Lambda
-from keras.layers import BatchNormalization
+from keras.layers import Input
+from keras.layers import Dense
+from keras.layers import Layer
 from keras.models import Model
-from keras.callbacks import ModelCheckpoint
 from keras.losses import mean_absolute_percentage_error
-from keras.initializers import RandomNormal, he_normal
-from keras import backend as K
 
-from .utils import Rolling, TimeSeriesTransfer, find_best_model
+from .utils import Rolling, TimeSeriesTransfer
 from .base import Forecaster
+from .advance import adam
 from .advance import SpectralNormalization, WeightEMA, gelu
-from .advance import adam, symmetric_mean_absolute_percentage_error
 from .advance import SaveBestModelOnMemory, calculate_batch_size
 
 # 前馈神经网络时序预测
@@ -50,6 +47,7 @@ class MLPForecaster(Forecaster):
 
         self.save_best = save_best
         if save_best:
+            # 把最佳权重存放到内存中
             fn = SaveBestModelOnMemory()
             callbacks = [fn]
         else:
@@ -74,7 +72,7 @@ class MLPForecaster(Forecaster):
                                       validation_data=validation_data,
                                       callbacks=callbacks,
                                       shuffle=True)
-
+        # 初始化预测的滑动窗口
         self._init_roller(X, y)
     
     def predict(self, forecast_size, post_fit=False):

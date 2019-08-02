@@ -1,5 +1,4 @@
 from .mlp import MLPForecaster
-from .cnn import CNNForecaster
 from .lstm import LSTMForecaster, BiLSTMForecaster, StackedLSTMForecaster
 from .ensemble import XGBForecaster, BoostingLinearForecaster, BaggingLinearForecaster
 from .linear import KLinearForecaster, RoughLinearForecaster, LinearForecaster
