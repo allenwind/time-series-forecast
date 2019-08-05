@@ -1,17 +1,18 @@
 ## TODO
 
 1. 把先验知识融入到模型中
-2. 模型压缩 (使用更小容量的模型达到大容量模型同等或近似的预测效果) (done)
-3. 时序到模型的映射 (根据时序特征自动确定适合的模型) (待调研)
-4. callback earlystopping、save best model (done)
-5. 使用贝叶斯优化寻找最优超参数
-6. 无序交叉检验
-7. end-to-end 的数据预处理
-8. 平稳化后通过 k sigma 去噪, 使用边缘值替代
-9. 计算时序潜在最大周期 (done)
-10. 处理预测 lag=1 的滞后问题 (done)
-11. XGBoost callback
-12. 预处理部分模块化
+2. 训练时改为 loss="mse"
+3. 模型压缩 (使用更小容量的模型达到大容量模型同等或近似的预测效果) (done)
+4. 时序到模型的映射 (根据时序特征自动确定适合的模型) (待调研)
+5. callback earlystopping、save best model (done)
+6. 使用贝叶斯优化寻找最优超参数
+7. 无序交叉检验
+8. end-to-end 的数据预处理
+9. 平稳化后通过 k sigma 去噪, 使用边缘值替代
+10. 计算时序潜在最大周期 (done)
+11. 处理预测 lag=1 的滞后问题 (done)
+12. XGBoost callback
+13. 预处理部分模块化
 
 ## Q&A
 
