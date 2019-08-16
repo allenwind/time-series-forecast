@@ -7,7 +7,7 @@ import numpy.fft as fft
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import StandardScaler
-from statsmodels.tsa.stattools import adfuller
+
 
 from .tsfeatures import extract_time_series_forecast_features
 from .tsfeatures.utils import find_time_series_max_periodic
@@ -18,69 +18,10 @@ time_series_features_size = lambda x: len(extract_time_series_forecast_features(
 
 # 时间序列处理有关的模块
 
-def check_time_series(series):
-    if not isinstance(series, np.ndarray):
-        raise ValueError("time series invalidation")
 
-def check_none_stationarity(series):
-    # 检测时间序列是否具有非平稳性
-    # wiki:
-    # https://en.wikipedia.org/wiki/Augmented_Dickey%E2%80%93Fuller_test
-    return adfuller(series)[1] > 0.05
 
-def check_white_noise(series):
-    # 检测时间序列或残差是否为白噪声
-    # wiki:
-    # https://en.wikipedia.org/wiki/White_noise
-    # https://en.wikipedia.org/wiki/Ljung%E2%80%93Box_test
-    return adfuller(series)[1] > 0.05
 
-def check_random_walk(series):
-    # 检测时间序列是否为随机游走
-    # 差分后的白噪声检验
-    return adfuller(np.diff(series))[1] > 0.05
 
-def check_time_series_periodic(series):
-    # 检测时间序列中周期性的强度
-    # 根据自相关性对时序进行分片
-    # 每段分别使用 DTW 度量它们的距离
-    # 如果这个距离越小，周期性越明显
-    # 如果输入序列并没有完整的周期，这种方法可能会失效
-    pass
-
-def time_series_fourier_denoise(series):
-    # 把原始时序变换到频域上，过滤掉高频信号
-    fs = fft.rfft(series)
-    freqs = fft.rfftfreq(len(series), 0.1)
-    fs[freqs > threshold] = 0 # 过滤高频信号
-    return fft.irfft(fs)
-
-def find_time_series_degree(series, threshold=0.05):
-    # 计算时间序列的阶
-    # wiki
-    # https://en.wikipedia.org/wiki/Dickey%E2%80%93Fuller_test
-
-    n = 0
-    adf = adfuller(series)
-    while adf[1] > threshold:
-        n += 1
-        series = np.diff(series)
-        adf = adfuller(series)
-    return n
-
-def view_rolling_features(series, size):
-    transfer = FeaturesTimeSeriesTransfer(series)
-    X, y = transfer.transform_features(size)
-    scaler = MinMaxScaler()
-    X = scaler.fit_transform(X)
-
-    plt.subplot(211)
-    plt.plot(series)
-    plt.subplot(212)
-    plt.imshow(X.T)
-    plt.xticks([])
-    plt.yticks([])
-    plt.show()
 
 def time_series_move_lag(series, lag=1, pad="first"):
     # 预测的滞后性，把预测结果往后移动 lag 个时间步，并使用 pad 进行填充
@@ -119,13 +60,7 @@ def find_max_autocorrelation_lag(series):
 
     return find_time_series_max_periodic(series)
 
-def visualize_autocorrelation(series, offset=0):
-    auto = np.array(time_series_all_autocorrelation(series))
-    plt.subplot(211)
-    plt.plot(series)
-    plt.subplot(212)
-    plt.plot(auto[offset:], "+")
-    plt.show()
+
 
 def timestamp2datetime(ts):
     return datetime.datetime.fromtimestamp(int(ts))
@@ -133,15 +68,7 @@ def timestamp2datetime(ts):
 def timestamps2datetimes(mts):
     return [timestamp2datetime(ts) for ts in mts]
 
-def train_val_split(series, train_rate=0.7, test_rate=0.7):
-    # 训练与检验集的分离
-    # TODO 交叉检验
 
-    idx1 = int(train_rate * len(series))
-    idx2 = int(test_rate * len(series))
-    s1 = series[:idx1+1]
-    s2 = series[idx1:]
-    return s1, s2
     
 def rolling_time_series(series, window_size, slide_size):
     length = len(series)
@@ -224,65 +151,9 @@ class lazyproperty:
             setattr(instance, self.func.__name__, value)
             return value
 
-class Pipeline:
-    
-    def __init__(self, estimators):
-        self.estimators = estimators
 
-    def fit(self, series):
-        return self
 
-    def fit_transform(self, series):
-        for e in self.estimators:
-            series = e.fit_transform(series)
-        return series
 
-    def inverse_transform(self, series):
-        for e in reversed(self.estimators):
-            series = e.inverse_transform(series)
-        return series
-
-class StationaryTransfer:
-
-    # 平稳时间序列与非平稳时间序列的转换
-    # 确定序列是否平稳可以通过 ACF
-    # 非平稳化为平稳序列可以通过差分方法
-    # 从平稳序列还原为源序列需要保留每次
-    # 差分的序列的首值.
-    
-    # TODO 整合自动定阶方法
-
-    def __init__(self, k=1, log=False):
-        self.k = k
-        self.log = log
-        self._init_values = []
-    
-    def fit_transform(self, series):
-        if self.log:
-            series = np.log(series)
-
-        # 迭代地执行高阶差分
-        k = self.k
-        while k:
-            self._init_values.append(series[0])
-            series = np.diff(series)
-            k -= 1
-        return series
-
-    def inverse_transform(self, series):
-        # 迭代地还原高阶差分
-        k = self.k
-        while k:
-            k -= 1
-            values = [self._init_values[k]]
-            #values.extend(series.tolist()) # 损失精度
-            values = np.append(values, series)
-            values = np.cumsum(values)
-            series = values
-        
-        if self.log:
-            values = np.exp(values)
-        return values
 
 class PowerTransfer:
 
