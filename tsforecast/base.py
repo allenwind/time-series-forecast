@@ -20,6 +20,30 @@ class BaseForecaster:
     def score(self, val_series):
         pass
 
+@total_ordering
+class _Forecaster:
+
+    def fit(self, x, y):
+        pass
+
+    def forecast(self, n_steps, interval):
+        pass
+
+    def predict(self, x):
+        pass
+
+    @property
+    def error(self):
+        pass
+    
+    def __eq__(self, other):
+        return self.error == other.error
+
+    def __gt__(self, other):
+        return self.error > other.error
+
+
+
 class Forecaster(BaseForecaster):
 
     # 预测模型通用函数
