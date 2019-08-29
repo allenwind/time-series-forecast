@@ -10,7 +10,6 @@ from sklearn.preprocessing import MinMaxScaler
 from scipy import signal
 from dateutil import parser as dparser
 
-from .utils import Rolling
 
 # np.random.seed(2**32 - 26)
 
