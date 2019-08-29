@@ -1,7 +1,7 @@
 import numpy as np
-from keras.layers import Input, Dense, LSTM
-from keras.models import Model
-from keras.losses import mean_absolute_percentage_error
+from tensorflow.keras.layers import Input, Dense, LSTM
+from tensorflow.keras.models import Model
+from tensorflow.keras.losses import mean_absolute_percentage_error
 
 from .utils import Rolling, TimeSeriesTransfer
 from .base import Forecaster
