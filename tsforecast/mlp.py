@@ -3,13 +3,19 @@ from tensorflow.keras.layers import Input
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.layers import Layer
 from tensorflow.keras.models import Model
-from tensorflow.keras.losses import mean_absolute_percentage_error
+from tensorflow.keras.losses import mean_squared_error
+from tensorflow.keras.metrics import mean_absolute_percentage_error
 
-from .utils import Rolling, TimeSeriesTransfer
+from kextend.callbacks import SaveBestModelOnMemory
+from kextend.optimizers import WeightEMA, SpectralNormalization
+from kextend.activations import gelu
+from tsutils.rolling import TimeSeriesRolling
+from tsutils.transform import TimeSeriesLabelizer
+
 from .base import Forecaster
-from .advance import adam
-from .advance import SpectralNormalization, WeightEMA, gelu
-from .advance import SaveBestModelOnMemory, calculate_batch_size
+from .advance import calculate_batch_size
+
+
 
 # 前馈神经网络时序预测
 
@@ -30,7 +36,7 @@ class MLPForecaster(Forecaster):
 
         outputs = Dense(1, activation="relu")(x)
         model = Model(inputs, outputs)
-        model.compile(optimizer=adam, loss=mean_absolute_percentage_error)
+        model.compile(optimizer="adam", loss=mean_absolute_percentage_error)
 
         self.size = size
         self.model = model
