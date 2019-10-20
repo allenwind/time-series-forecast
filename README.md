@@ -1,6 +1,8 @@
 # time-series-forecast
 
-本项目实现基于机器学习和深度学习的时间序列预测, 通过训练多个模型, 以一定的组合策略(Bestone or Combiantion) 组合各模型的预测结果.
+本项目并没有实现一个解决时间序列预测（forecasting）的模型，而是实现基于机器学习和深度学习的滑动窗口预测的一般方法。具体的模型需要根据场景来决定。
+
+本项目实现, 通过训练多个模型, 以一定的组合策略(Bestone or Combiantion) 组合各模型的预测结果.
 
 组合策略目前有两种:
 
@@ -230,3 +232,8 @@ LSTM 处理过拟合和 MLP 处理过拟合是相似的, 不详细讲述.
 
 1. https://otexts.com/fpp2/
 2. http://www.oxford-man.ox.ac.uk/sites/default/files/events/combination_Sofie.pdf
+
+## 依赖和参考项目
+
+[time-series-utils]()
+[time-series-features]
