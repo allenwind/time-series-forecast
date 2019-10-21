@@ -39,6 +39,8 @@
 
 ![how-to-label-data](./png/how-to-labeling-time-series.png)
 
+这种方法在 seq2seq 任务中，训练 RNN 神经网络称为 forcing teaching。
+
 ## 预处理
 
 预处理包括如下:
