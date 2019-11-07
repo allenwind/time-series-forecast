@@ -1,63 +1,38 @@
-import os
+__all__ = ["ModelBase", "ForecasterBase"]
 
-from keras.utils import plot_model
-from keras.models import Model
-import matplotlib.pyplot as plt
+class ModelBase:
 
-class BaseForecaster:
+    """
+    1. 关注场景本身，根据场景定义模型，如果是机器学习模型，则关注特征函数
+    2. 关注如何训练与优化模型的实现
+    3. 无状态，确定的输入，确定的输出，不随时间、操作变化
+    4. 模型持久化
+    """
 
-    # 预测模型基础接口
-    
-    def fit(self, series, epochs, batch_size, validation_series=None):
+    def fit(self, X, y, epochs, batch_size, validation_rate):
         pass
 
-    def predict(self, forecast_size, post_fit=False):
-        pass
-
-    def _init_roller(self, X, y):
-        pass
-
-    def score(self, val_series):
-        pass
-
-@total_ordering
-class _Forecaster:
-
-    def fit(self, x, y):
-        pass
-
-    def forecast(self, n_steps, interval):
-        pass
-
-    def predict(self, x):
+    def predict(self, X):
         pass
 
     @property
-    def error(self):
+    def window_size(self):
+        # 返回滑动窗口的大小
+        return self._window_size
+
+class ForecasterBase:
+
+    """
+    1. 关注如何完成多步预测
+    2. 关注对模型的控制，如训练、预测、监控指标
+    3. 处理状态信息
+    """
+
+    def fit(self, series, epochs, batch_size, validation_rate):
         pass
-    
-    def __eq__(self, other):
-        return self.error == other.error
 
-    def __gt__(self, other):
-        return self.error > other.error
+    def forecast(self, n_steps):
+        pass
 
-
-
-class Forecaster(BaseForecaster):
-
-    # 预测模型通用函数
-
-    def plot_model(self, path=None, show=True):
-        if path is None:
-            path = "{}.png".format(str(self))
-
-        if isinstance(self.model, Model):
-            plot_model(self.model, to_file=path, show_shapes=True, show_layer_names=True)
-        
-        if show and os.path.exists(path):
-            plt.imread(path)
-            plt.imshow()
-
-    def __repr__(self):
-        return "<{}>".format(self.__class__.__name__)
+    def reset_state(self):
+        pass

@@ -1,7 +1,5 @@
 __pycache__/
-_source/
 weights/
-tsfeatures
 *.pyc
 *.pyo
 
