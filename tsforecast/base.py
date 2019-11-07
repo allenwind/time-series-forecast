@@ -9,15 +9,22 @@ class ModelBase:
     4. 模型持久化
     """
 
-    def fit(self, X, y, epochs, batch_size, validation_rate):
+    def fit(self, X, y, epochs=None, batch_size=None, validation_rate=0):
+        # validation_rate
+        # 输入的数据中，取部分作为验证集合，通常用在 callback 中
         pass
 
     def predict(self, X):
         pass
 
+    def reset(self):
+        # 清空模型权重
+        pass
+
     @property
     def window_size(self):
         # 返回滑动窗口的大小
+        # window_size 作为一个超参数，像 batch_size 一样关乎模型的预测效果
         return self._window_size
 
 class ForecasterBase:

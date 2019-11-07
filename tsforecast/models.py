@@ -24,8 +24,6 @@ class MLPModel(ModelBase):
         self.model.compile(optimizer="adam", loss="mse")
 
     def fit(self, X, y, epochs, batch_size, validation_rate):
-        # TODO validation_rate
-        # TODO callback
         self.model.fit(X, y, epochs=epochs, batch_size=batch_size)
 
     def predict(self, X):

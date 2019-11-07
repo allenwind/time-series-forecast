@@ -7,10 +7,12 @@
 
 这三点应该分离实现。
 
-第一点关注数据的清洗、变换等。具体可见 [time-series-utils]()
-第二点根据场景需求而定，模型可能是机器学习模型，也可能是深度学习模型。不存在通用的模型能满足所有的场景。预测结果的好坏取决于模型的实现、训练优化.
+第一点关注数据的清洗、变换等。具体可见 [time-series-utils](https://github.smartx.com/zhiwen/time-series-utils)
+第二点根据场景需求而定，模型可能是机器学习模型，也可能是深度学习模型。不存在通用的模型能满足所有的场景。预测结果的好坏取决于模型的实现、训练优化。
 
 本项目则是实现第三点，多步时间序列预测。
+
+## 原理
 
 思路如下
 
@@ -33,4 +35,73 @@
 从 `deepmind` [wavenet](https://deepmind.com/blog/article/wavenet-generative-model-raw-audio) 一动画更直观理解多步预测，
 
 ![how-to-forecast-time-series](./asset/how-to-forecast-time-series.gif)
+
+## 演示
+
+`tsforecast` 内置一个带两个隐层的前馈神经网络，用于演示
+
+非线性预测效果：
+
+![](./asset/nonlinear-demo.png)
+
+来自 `dogfood` 的性能指标预测：
+
+![dogfood-iops.png](./asset/dogfood-iops.png)
+
+
+
+## 使用
+
+根据场景和需求设计你的模型或特征函数并实现如下接口：
+
+```python
+class ModelBase:
+
+    """
+    1. 关注场景本身，根据场景定义模型，如果是机器学习模型，则关注特征函数
+    2. 关注如何训练与优化模型的实现
+    3. 无状态，确定的输入，确定的输出，不随时间、操作变化
+    4. 模型持久化
+    """
+
+    def fit(self, X, y, epochs=None, batch_size=None, validation_rate=0):
+        # validation_rate
+        # 输入的数据中，取部分作为验证集合，通常用在 callback 中
+        pass
+
+    def predict(self, X):
+        pass
+
+    def reset(self):
+        # 清空模型权重
+        pass
+
+    @property
+    def window_size(self):
+        # 返回滑动窗口的大小
+        # window_size 作为一个超参数，像 batch_size 一样关乎模型的预测效果
+        return self._window_size
+```
+
+
+
+使用你的模型以及具体的数据进行预测：
+
+```python
+from tsforecast import TimeSeriesForecaster
+
+model = YourModel(window_size, your_params)
+series = load_your_data()
+fr = TimeSeriesForecaster(model)
+fr.fit(series, epochs=100, batch_size=50, validation_rate=0)
+pred_series = fr.forecast(n_steps=100)
+```
+
+
+
+实际情况可能还涉及交叉验证、数据预处理等。可参考 `examples` 下两个例子。
+
+
+
+
 
