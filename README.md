@@ -106,6 +106,9 @@ pred_series = fr.forecast(n_steps=100)
 实际情况可能还涉及交叉验证、数据预处理等。可参考 `examples` 下两个例子。
 
 
+## TODO
 
-
-
+1. 支持多维时序预测
+2. 分离模型实现到 tsmodels
+3. 实现膨胀卷积, pure Attention
+4. 概率化模型的实现

@@ -15,6 +15,7 @@ class ModelBase:
         pass
 
     def predict(self, X):
+        # 输出下一个时间步的取值
         pass
 
     def reset(self):
@@ -26,6 +27,15 @@ class ModelBase:
         # 返回滑动窗口的大小
         # window_size 作为一个超参数，像 batch_size 一样关乎模型的预测效果
         return self._window_size
+
+class ProbaModelBase:
+    """
+    概率化预测模型
+    """
+
+    def predict(self, X):
+        # 输出下一个时间步取值的概率分布
+        pass
 
 class ForecasterBase:
 
