@@ -30,7 +30,7 @@ class TimeSeriesForecaster(ForecasterBase):
         for i in range(n_steps):
             # 获取当前窗口
             X = self.roller.transform()
-            X = np.expand_dims(X,0)
+            X = np.expand_dims(X, 0)
             # 预测当前时间步取值
             y = self.model.predict(X)
             y_pred[i] = y
