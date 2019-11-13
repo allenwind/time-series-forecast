@@ -110,10 +110,13 @@ def random_fourier_series(size=1000, n=30):
 
     s = 0
     y = 0
+    c = np.random.uniform(0, 1, size)
+    c = c / np.sum(c)
     for a, b in zip(an, bn):
+        k = c[s]
         s += 1
-        y += a * np.cos(s*x) + b * np.sin(s*x)
-    return _add_noise(y, add=True, multiply=False)
+        y += (a * np.cos(s*x) + b * np.sin(s*x)) * k
+    return _add_noise(y, add=False, multiply=False)
 
 def random_fourier_series_with_change_phase(size=1000, n=50):
     pass
