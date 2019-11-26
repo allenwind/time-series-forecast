@@ -1,6 +1,6 @@
 import numpy as np
-from tsutils.rolling import TimeSeriesRolling
-from tsutils.labeling import TimeSeriesLabelizer
+from .rolling import TimeSeriesRolling
+from .labeling import TimeSeriesLabelizer
 
 from .base import ForecasterBase
 
