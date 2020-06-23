@@ -7,7 +7,7 @@
 
 这三点应该分离实现。
 
-第一点关注数据的清洗、变换等。具体可见 [time-series-utils](https://github.smartx.com/zhiwen/time-series-utils)
+第一点关注数据的清洗、变换等。具体可见 [time-series-utils](https://github.com/allenwind/time-series-utils)
 
 第二点根据场景需求而定，模型可能是机器学习模型，也可能是深度学习模型。不存在通用的模型能满足所有的场景。预测结果的好坏取决于模型的实现、训练优化。
 
@@ -37,7 +37,7 @@
 
 
 
-从 `deepmind` [wavenet](https://deepmind.com/blog/article/wavenet-generative-model-raw-audio) 一动画更直观理解多步预测，
+借用 `deepmind` [wavenet](https://deepmind.com/blog/article/wavenet-generative-model-raw-audio) 中一动画更直观理解多步预测，
 
 ![how-to-forecast-time-series](./asset/how-to-forecast-time-series.gif)
 
@@ -56,6 +56,12 @@
 
 
 ## 使用
+
+
+
+可以使用 `PYTHONPATH` 环境变量导入本项目
+
+
 
 根据场景和需求设计你的模型或特征函数并实现如下接口：
 
