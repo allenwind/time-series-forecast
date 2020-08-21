@@ -133,7 +133,7 @@ pred_series = fr.forecast(n_steps=100)
 
 1. 支持多维时序预测
 2. 实现概率化的自回归方法
-3. 实现 beam search 方法
+3. 实现 beam search 方法和随机采样
 4. 分离模型实现到 tsmodels
 5. 实现膨胀卷积, pure Attention
 6. 概率化预测模型的实现
