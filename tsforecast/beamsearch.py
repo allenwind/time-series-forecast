@@ -1,5 +1,5 @@
 
-from .tokenizex import SimpleTokenizer
+from .tokenizer import SimpleTokenizer
 
 class BeamSearchForecaster:
 

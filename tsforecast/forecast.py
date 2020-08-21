@@ -1,7 +1,7 @@
 import numpy as np
+
 from .rolling import TimeSeriesRolling
 from .labeling import TimeSeriesLabelizer
-
 from .base import ForecasterBase
 
 class TimeSeriesForecaster(ForecasterBase):

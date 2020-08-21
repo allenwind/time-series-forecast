@@ -1,5 +1,5 @@
 service=time-series-forecast
-package = github.smartx.com/smartx/${service}
+package = github.com/allenwind/${service}
 version = $(shell git describe --long --tags --dirty | awk '{print substr($$1,2)}')
 
 

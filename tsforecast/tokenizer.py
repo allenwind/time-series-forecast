@@ -47,14 +47,14 @@ class TokenizerBase:
         # 采样误差函数
         pass
 
-class SimpleTokenizer(TokenizerBase):
+class OneHotTokenizer(TokenizerBase):
 
     # 连续信号的离散化
 
-    def __init__(self, size, bin_range=(0, 1)):
+    def __init__(self, size, brange=(0, 1)):
         self.size = size
-        self.r_min = bin_range[0]
-        self.r_max = bin_range[1]
+        self.r_min = brange[0]
+        self.r_max = brange[1]
         self.bins = np.linspace(self.r_min, self.r_max, self.size)
         self.onehot = np.eye(self.size)
 
@@ -83,12 +83,13 @@ class SimpleTokenizer(TokenizerBase):
         return series
 
     def scores_f(self, s1, s2):
+        # 比较采样与逆采用后的损失
         return np.sqrt(np.sum(np.square(s1-s2))) / len(s1)
 
 
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
-    b = SimpleTokenizer(size=100, bin_range=(-1, 1))
+    b = OneHotTokenizer(size=100, brange=(-1, 1))
     x = np.linspace(0, 2*np.pi, 1000)
     series = np.random.uniform(-1, 1, len(x))
     tseries = b.transform(series)
