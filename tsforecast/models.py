@@ -17,7 +17,8 @@ class MLPModel(ModelBase):
 
     def build(self):
         inputs = Input(shape=(self.window_size,))
-        x = Dense(2*self.window_size-1, activation="relu")(inputs)
+        x = Dense(2*self.window_size+1, activation="relu")(inputs)
+        x = Dense(self.window_size, activation="relu")(x)
         x = Dense(self.window_size, activation="relu")(x)
         outputs = Dense(1)(x)
         self.model = Model(inputs, outputs)

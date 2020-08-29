@@ -40,6 +40,7 @@ class ForecasterBase:
         pass
 
     def forecast(self, n_steps):
+        # 完成多步预测
         pass
 
     def reset_state(self):
