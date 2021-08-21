@@ -37,4 +37,3 @@ def plot_forecast(series, val_series, pred_series):
     fig.set_position([box.x0, box.y0, box.width * 0.9, box.height])
     fig.legend(loc="upper left", bbox_to_anchor=(1, 0.5))
     plt.show()
-

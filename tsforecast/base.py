@@ -46,12 +46,3 @@ class ForecasterBase:
     def reset_state(self):
         pass
 
-class ProbaModelBase:
-    """
-    TODO:
-    概率化预测模型
-    """
-
-    def predict(self, X):
-        # 输出下一个时间步取值的概率分布
-        pass
