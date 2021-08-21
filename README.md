@@ -1,6 +1,6 @@
 # tsforecast
 
-基于滑动窗口进行时间序列多步预测的工具。
+基于滑动窗口进行时间序列多步预测的工具tsforecast。
 
 
 
@@ -31,7 +31,7 @@
 ## 安装
 
 
-本项目只依赖`numpy`、`keras`等常用工具库，非常轻量。
+本项目只依赖`numpy`、`tensorflow`等常用工具库，非常轻量。
 
 克隆项目到`{your_path}`，
 
@@ -51,11 +51,10 @@ export PYTHONPATH={your_path}/time-series-forecast:$PYTHONPATH
 source ~/.bashrc
 ```
 
-然后可以跑一下`examples/tests.py`下的例子。
+然后可以到`examples`目录下跑一下`example-1.py`、`example-2.py`这两个例子。
 
 
 ## 使用
-
 
 
 根据场景和需求设计你的模型或特征函数并实现如下接口：
@@ -90,7 +89,6 @@ class ModelBase:
 ```
 
 
-
 使用你的模型以及具体的数据进行预测：
 
 ```python
@@ -104,8 +102,7 @@ pred_series = fr.forecast(n_steps=100)
 ```
 
 
-
-实际情况可能还涉及交叉验证、数据预处理等。可参考 `examples` 下两个例子。
+实际情况可能还涉及交叉验证、数据预处理等。可参考 `examples` 目录下两个例子。
 
 
 
