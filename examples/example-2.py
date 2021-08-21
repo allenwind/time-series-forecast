@@ -1,6 +1,5 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import pandas as pd
 
 from tsforecast import TimeSeriesForecaster
 from tsforecast import MLPModel
@@ -8,8 +7,7 @@ from tsforecast import plot_forecast
 from tsforecast.validation import time_series_train_test_split
 from tsforecast.scaler import SimpleScaler
 
-df = pd.read_csv("monthly-sunspots.csv")
-series = df.iloc[:, 1].values
+series = np.load("series.npy")
 
 train_series, test_series = time_series_train_test_split(series, train_size=0.7)
 scaler = SimpleScaler()

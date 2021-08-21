@@ -34,14 +34,18 @@ train_size = 0.8
 # generate data
 series = multi_periodic_function(size=series_size)
 
+# train test split
 train_series, test_series = time_series_train_test_split(series, train_size)
 scaler = SimpleScaler()
+# scaling
 train_series_t = scaler.fit_transform(train_series)
 
+# training model
 model = MLPModel(window_size)
 fr = TimeSeriesForecaster(model)
 fr.fit(train_series_t, epochs=100, batch_size=50, validation_rate=0)
 pred_series_t = fr.forecast(n_steps=n_steps)
 pred_series = scaler.inverse_transform(pred_series_t) # 预测结果逆变换
 
+# visualization
 plot_forecast(train_series, test_series, pred_series)
