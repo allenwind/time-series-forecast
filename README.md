@@ -1,78 +1,57 @@
-# nntsfit
+# tsforecast
+
+基于滑动窗口进行时间序列多步预测的工具。
+
+
+
+## 演示
+
+
+一下的演示均使用tsforecast内置一个带两个隐层的前馈神经网络作为训练模型，
+
+
+示例一：
+
+![](asset/demo-1.png)
+
+示例二：
+
+![](asset/demo-2.png)
+
+示例三：
+
+![](asset/demo-3.png)
+
+示例四：
+
+![](asset/demo-4.png)
 
 
 
 ## 安装
 
-在Linux系统下
+
+本项目只依赖`numpy`、`keras`等常用工具库，非常轻量。
+
+克隆项目到`{your_path}`，
 
 ```bash
-git clone 
+git clone https://github.com/allenwind/time-series-forecast.git
 ```
 
+打开`.bashrc`添加项目路径到`PYTHONPATH`环境变量中，
 
-
-可以使用 `PYTHONPATH` 环境变量导入本项目
-
-```sh
-export PYTHONPATH=${nntsfit_path}:$PYTHONPATH
+```.bashrc
+export PYTHONPATH={your_path}/time-series-forecast:$PYTHONPATH
 ```
 
+然后，
 
+```bash
+source ~/.bashrc
+```
 
-
-
-## 原理
-
-完成时间序列的多步预测需要三点：
-
-1. 数据预处理实现，关注数据的清洗、变换等
-2. 预测模型的实现、训练、优化，根据场景需求而定，模型可能是机器学习模型，也可能是深度学习模型。不存在通用的模型能满足所有的场景。预测结果的好坏取决于模型的实现、训练优化。
-3. 多步预测算法的实现
-
-
-
-多步预测算法的实现的思路：
-
-- 随参数 t 变化的思路
-- 滑动窗口
-- 自回归思路 （连续） (RNN vs FNN 的方式是不一样，前者有状态)
-- binnize, beam search (概率化)，根据采样定理还原模拟信号
-
-思路如下
-
-时间序列数据没有带标注, 而带监督的机器学习学习模型的训练需要定义输入与输出, 那么怎么把时间序列数据转化为带标注的形式呢？首先把原始序列（预处理后）化成带标注形式，
-
-![how-to-labeling-time-series](./asset/how-to-labeling-time-series.png)
-
-我们称它为自监督标注。这种做法在 `NLP` 中训练 `RNN` 十分普遍，只不过我们把它引入到时序预测中。时间窗口的大小以超参数的形式存在，也可以考虑自动化地确定时间窗口的大小。
-
-
-
-预测时，通过滑动一个固定的窗口完成多步预测，
-
-![how-to-forecast-time-series](./asset/how-to-forecast-time-series.png)
-
-如果使用的预测模型是神经网络，则没有显式的特征计算过程。
-
-
-
-借用 `deepmind` [wavenet](https://deepmind.com/blog/article/wavenet-generative-model-raw-audio) 中一动画更直观理解多步预测，
-
-![how-to-forecast-time-series](./asset/how-to-forecast-time-series.gif)
-
-## 演示
-
-`tsforecast` 内置一个带两个隐层的前馈神经网络，用于演示
-
-非线性预测效果：
-
-![](./asset/nntsfit-demo-1.png)
-
-来自 `dogfood` 的性能指标预测：
-
-![dogfood-iops.png](./asset/dogfood-iops.png)
-
+然后可以跑一下`examples/tests.py`下的例子。
 
 
 ## 使用
@@ -129,14 +108,4 @@ pred_series = fr.forecast(n_steps=100)
 实际情况可能还涉及交叉验证、数据预处理等。可参考 `examples` 下两个例子。
 
 
-## TODO
 
-1. 支持多维时序预测
-2. 实现概率化的自回归方法
-3. 实现 beam search 方法和随机采样
-4. 分离模型实现到 tsmodels
-5. 实现膨胀卷积, pure Attention
-6. 概率化预测模型的实现
-7. 添加离散化处理并支持多维时序的离散化表示
-8. 支持带状态的 RNN 模型
-9. 支持滑动窗口大小的自动判别算法

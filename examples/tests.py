@@ -10,7 +10,7 @@ from tsforecast.scaler import SimpleScaler
 def _add_noise(y, add=True, multiply=False):
     u = np.max(y)
     if add:
-        anoise = np.random.normal(0, u/20, size=len(y))
+        anoise = np.random.normal(0, u/100, size=len(y))
     else:
         anoise = 0
     
@@ -25,7 +25,7 @@ def multi_periodic_function(size=1000):
     y = np.log(x+1) + np.sqrt(x) + np.sin(x) + np.cos(2*x) + \
         1/3 * np.sin(6*x) + 1/4 * np.cos(10*x) + \
         1/5 * np.sin(15*x) + 1/5 * np.cos(14*x)
-    return _add_noise(y, add=False, multiply=False)
+    return _add_noise(y, add=True, multiply=False)
 
 series_size = 1000
 window_size = 100
