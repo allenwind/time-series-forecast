@@ -4,6 +4,26 @@
 
 
 
+## 原理
+
+滑动窗口自监督的数据标注：
+
+![](asset/how-to-labeling-time-series.png)
+
+
+
+训练好模型后，滑动窗口递归地进行多步预测：
+
+![](asset/how-to-forecast-time-series.png)
+
+
+
+借用deepmind [wavenet](https://deepmind.com/blog/article/wavenet-generative-model-raw-audio) 中一动画更直观理解多步预测，
+
+![](asset/how-to-forecast-time-series.gif)
+
+
+
 ## 演示
 
 
